@@ -1,0 +1,124 @@
+.elements{
+  display: flex;
+  margin: auto;
+  max-width: 880px;
+  width: 100%;
+  margin-top: 50px;
+  
+}
+
+.elements__list{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 100%;
+  gap: 16px;
+  height: 100%;
+  
+}
+.elements__title{
+  flex: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.elements__item{
+  height: 282px;
+  max-height: 100%;
+  overflow: hidden;
+  width: 100%;
+  object-fit: cover;
+ cursor: pointer;
+ transition: all 0.2s ease-in-out;
+}
+.elements__list-img-wrapper{
+  height: 282px;
+  max-height: 100%;
+  overflow: hidden;
+  width: 100%;
+  object-fit: cover;
+  transition: all 0.2s ease-in-out;
+}
+.elements__item:hover{
+  transform: scale(1.2);
+ 
+}
+.elements__btn-trh{
+  display: none;
+  position: absolute;
+  top: 18px;
+  right: 15px;
+  width: 18px;
+  height: 20px;
+  flex-shrink: 0;
+  background-image: url(../images/Trash.svg);
+  color: #fff;
+  border: none;
+}
+.elements__btn-trh-visible{
+  display: flex;
+}
+
+
+.elements__btn-trh:hover{
+  opacity: 0.6;
+}
+
+.elements__list-img{
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  color: black;
+}
+
+.elements__description{
+  background-color: #fff;
+  padding: 25px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: inter;
+  font-weight: 900;
+  font-size: 24px;
+}
+.elements__btn-hrt{
+  background-image: url(../images/Vector_heart.png);
+  width:20px;
+  height: 20px;
+  border: none;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.elements__btn-hrt:hover{
+  opacity: 0.6;
+}
+.elements__btn-hrt_actived{
+  background-image: url(../images/heart-activated.svg);
+}
+
+.elements__heart-container{
+  display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+}
+.elements__btn-hrt-counter{
+  
+   font-size:13px;
+   font-weight: 400;
+  
+}
+
+@media screen and (max-width: 640px) {
+  .elements__list {
+    grid-template-columns: 1fr;
+  }
+  .elements__item{
+    height:100%;
+    
+
+   }
+}
