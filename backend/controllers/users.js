@@ -32,31 +32,66 @@ const getUserById = (req, res) => {
     });
 };
 
-const createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-
-  if (!name || !about || !avatar) {
-    return res.status(400).send({ error: "Dados inválidos..." });
+function createUser(req, res, next) {
+  const { name, about, avatar, email, password } = req.body;
+  try {
+    if (!email || !password) {
+      const err = new Error("Dados inválidos...");
+      err.statusCode = 400;
+      throw err;
+    }
+  } catch (error) {
+    next(error);
   }
 
-  return User.create({
-    name,
-    about,
-    avatar,
-  })
+  bcrypt
+    .hash(password, 10)
+    .then((hash) =>
+      User.create({
+        name,
+        about,
+        avatar,
+        email,
+        password: hash,
+      })
+    )
     .then((user) => {
-      if (!user) {
-        const err = new Error("Ocorreu um erro ao criar usuário");
-        err.status = 500;
-        throw err;
-      }
-      res.send({ data: user });
+      res.status(201).send({
+        data: {
+          name: user.name,
+          about: user.about,
+          avatar: user.avatar,
+          email: user.email,
+        },
+      });
     })
-    .catch((err) => {
-      console.log("createUser Error:", err);
-      res.status(err.status).send({ error: err.message });
-    });
-};
+    .catch(next);
+}
+// const createUser = (req, res) => {
+//   const { name, about, avatar, email, password } = req.body;
+
+//   if (!email|| !about || !avatar) {
+//     return res.status(400).send({ error: "Dados inválidos..." });
+//   }
+
+//   return User.create({
+//     name,
+//     about,
+//     avatar,
+//   })
+//     .then((user) => {
+//       if (!user) {
+//         const err = new Error("Ocorreu um erro ao criar usuário");
+//         err.status = 500;
+//         throw err;
+//       }
+//       res.send({ data: user });
+//     })
+//     .catch((err) => {
+//       console.log("createUser Error:", err);
+//       res.status(err.status).send({ error: err.message });
+//     });
+// };
 const updateUserProfile = (req, res) => {
   const { name, about } = req.body;
   const userId = req.user._id;
