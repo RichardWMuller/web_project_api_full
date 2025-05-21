@@ -1,11 +1,13 @@
 const User = require("../models/user");
 const getUsers = (req, res) => {
-  return User.find({})
+  User.findById(req.user.id)
+    .orFail(() => {
+      const err = new Error("Ocorreu um erro ao buscar usuários");
+      err.status = 404;
+      throw err;
+    })
     .then((users) => {
       if (!users) {
-        const err = new Error("Ocorreu um erro ao buscar usuários");
-        err.status = 500;
-        throw err;
       }
       res.send({ data: users });
     })
@@ -156,10 +158,41 @@ const updateUserAvatar = (req, res) => {
     });
 };
 
+login = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email }).select("+password");
+
+    if (!user) {
+      const error = new Error("E-mail ou senha incorretos");
+      error.statusCode = 401;
+      throw error;
+    }
+
+    const matched = await bcrypt.compare(password, user.password);
+
+    if (!matched) {
+      const error = new Error("E-mail ou senha incorretos");
+      error.statusCode = 401;
+      throw error;
+    }
+
+    const token = jwt.sign({ _id: user._id }, "7777", {
+      expiresIn: "7d",
+    });
+
+    return res.status(200).json({ token });
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getUsers,
   getUserById,
   createUser,
   updateUserProfile,
   updateUserAvatar,
+  login,
 };

@@ -20,14 +20,6 @@ app.get("/", (req, res) => {
   res.status(500).json({ message: "A solicitação não foi encontrada" });
 });
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: "67c22b2f9eae73490089487f", // cole o _id do usuário teste criado no passo anterior
-  };
-
-  next();
-});
-
 app.use(userRoutes);
 app.use(cardRoutes);
 app.use("/", (req, res) => {
