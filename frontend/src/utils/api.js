@@ -108,6 +108,7 @@ export default class Api {
 
 export const api = new Api({
   baseUrl: 'https://around.nomoreparties.co/v1/web_ptbr_09',
+
   headers: {
     authorization: 'e56efdde-cda5-421a-9ac8-6287a7acd788',
     'Content-Type': 'application/json'
