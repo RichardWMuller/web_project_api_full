@@ -10,11 +10,10 @@ const {
   login,
 } = require("../controllers/users");
 
-router.post("/signin", login);
+router.post("/signin", login); // Login — público
+router.post("/signup", createUser); // Criação de usuário — público
 
-router.post("/signin", createUser);
-
-router.use(auth);
+router.use(auth); // A partir daqui, autenticação obrigatória
 
 router.get("/", getUsers);
 router.get("/me", getUserById);

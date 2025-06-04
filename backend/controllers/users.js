@@ -1,6 +1,8 @@
 const User = require("../models/user");
+const bcrypt = require("bcrypt");
+
 const getUsers = (req, res) => {
-  User.findById(req.user.id)
+  User.findById(req.user._id)
     .orFail(() => {
       const err = new Error("Ocorreu um erro ao buscar usuários");
       err.status = 404;
@@ -178,7 +180,7 @@ login = async (req, res, next) => {
       throw error;
     }
 
-    const token = jwt.sign({ _id: user._id }, "7777", {
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
 

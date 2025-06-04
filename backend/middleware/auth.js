@@ -9,18 +9,11 @@ module.exports = (req, res, next) => {
 
   const token = authorization.replace("Bearer ", "");
 
-  let payload;
-
   try {
-    payload = jwt.verify(token, "7777");
-  } catch (e) {
-    const err = new Error("Não autorizado");
-    err.statusCode = 403;
-
-    next(err);
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = payload;
+    next();
+  } catch (err) {
+    return res.status(401).send({ message: "Token inválido ou expirado" });
   }
-
-  req.user = payload;
-
-  next();
 };
