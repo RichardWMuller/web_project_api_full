@@ -10,13 +10,13 @@ const {
   login,
 } = require("../controllers/users");
 
-router.post("/signin", login); // Login — público
-router.post("/signup", createUser); // Criação de usuário — público
+router.post("/signin", login);
+router.post("/signup", createUser);
 
-router.use(auth); // A partir daqui, autenticação obrigatória
+router.use(auth);
 
-router.get("/", getUsers);
-router.get("/me", getUserById);
+router.get("/me", getUsers);
+router.get("/:userId", getUserById);
 router.patch("/me", updateUserProfile);
 router.patch("/me/avatar", updateUserAvatar);
 
