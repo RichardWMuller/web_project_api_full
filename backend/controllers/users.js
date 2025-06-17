@@ -38,7 +38,7 @@ const getUserById = (req, res) => {
 };
 
 function createUser(req, res, next) {
-  const { name, about, avatar, email, password } = req.body;
+  const { name, about, avatar, email } = req.body;
   try {
     if (!email || !password) {
       const err = new Error("Dados inválidos...");
@@ -161,7 +161,7 @@ login = async (req, res, next) => {
       expiresIn: "7d",
     });
 
-    return res.status(200).json({ token });
+    return res.status(200).json({ user, token });
   } catch (err) {
     next(err);
   }
