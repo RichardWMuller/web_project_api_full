@@ -22,7 +22,12 @@ export default function Main() {
   const [name, setName] = useState('')
   const [job, setJob] = useState('')
   const [avatar, setAvatar] = useState('')
-  const [currentUser, setCurrentUser] = useState({})
+  const [currentUser, setCurrentUser] = useState({
+    name: '',
+    about: '',
+    avatar: '',
+    _id: ''
+  })
   const [cardLink, setCardLink] = useState('')
   const [cardTitle, setCardTitle] = useState('')
   const navigate = useNavigate()
@@ -228,58 +233,63 @@ export default function Main() {
           />
         )}
 
-        <div className="profile__content">
-          <button
-            className="button profile__button-avatar"
-            onClick={handleEditAvatarClick}
-          >
-            <img
-              className="profile__avatar"
-              src={currentUser.avatar}
-              alt="Foto de Perfil"
-            />
-          </button>
-          <div className="profile__info">
-            <div className="profile__title-btn">
-              <h1 className="profile__title">{currentUser.name}</h1>
-              <button
-                className="button profile__btn-title"
-                onClick={handleProfileClick}
-              >
-                <img src={profileBtn} alt="Botão de editar perfil" />
-              </button>
+        {currentUser && currentUser.avatar ? (
+          <div className="profile__content">
+            <button
+              className="button profile__button-avatar"
+              onClick={handleEditAvatarClick}
+            >
+              <img
+                className="profile__avatar"
+                src={currentUser.avatar}
+                alt="Foto de Perfil"
+              />
+            </button>
+            <div className="profile__info">
+              <div className="profile__title-btn">
+                <h1 className="profile__title">{currentUser.name}</h1>
+                <button
+                  className="button profile__btn-title"
+                  onClick={handleProfileClick}
+                >
+                  <img src={profileBtn} alt="Botão de editar perfil" />
+                </button>
+              </div>
+              <p className="profile__subtitle">{currentUser.about}</p>
             </div>
-            <p className="profile__subtitle">{currentUser.about}</p>
+            <button
+              className="button profile__btn-add"
+              onClick={handleAddPlaceClick}
+            >
+              <img src={addBtn} alt="Botão de adicionar" />
+            </button>
           </div>
-          <button
-            className="button profile__btn-add"
-            onClick={handleAddPlaceClick}
-          >
-            <img src={addBtn} alt="Botão de adicionar" />
-          </button>
-        </div>
+        ) : (
+          <p>Carregando perfil...</p>
+        )}
       </section>
       <section className="elements">
         <ul className="elements__list" id="elements__list">
-          {cards.map(card => {
-            const { link, name, likes, _id, owner } = card
-            const isLiked = verifyCardLikes(likes)
-            const isOwner = verifyCardOwner(owner._id)
-            return (
-              <Card
-                key={card._id}
-                link={link}
-                name={name}
-                likes={likes}
-                _id={_id}
-                onCardClick={handleCardClick}
-                isLiked={isLiked}
-                handleCardLike={handleCardLike}
-                isOwner={isOwner}
-                onCardDelete={handleCardDelete}
-              />
-            )
-          })}
+          {Array.isArray(cards) &&
+            cards.map(card => {
+              const { link, name, likes, _id, owner } = card
+              const isLiked = verifyCardLikes(likes)
+              const isOwner = verifyCardOwner(owner._id)
+              return (
+                <Card
+                  key={_id}
+                  link={link}
+                  name={name}
+                  likes={likes}
+                  _id={_id}
+                  onCardClick={handleCardClick}
+                  isLiked={isLiked}
+                  handleCardLike={handleCardLike}
+                  isOwner={isOwner}
+                  onCardDelete={handleCardDelete}
+                />
+              )
+            })}
         </ul>
       </section>
     </main>

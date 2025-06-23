@@ -18,6 +18,7 @@ export default class Api {
       .then(this._verifyResponse)
       .catch(err => {
         console.error('Erro ao buscar informações do usuário:', err)
+        return Promise.reject(err)
       })
   }
 
@@ -28,6 +29,7 @@ export default class Api {
       .then(this._verifyResponse)
       .catch(err => {
         console.error('Erro ao buscar os cards iniciais:', err)
+        return Promise.reject(err)
       })
   }
 
@@ -111,6 +113,7 @@ export const api = new Api({
 
   headers: {
     authorization: 'e56efdde-cda5-421a-9ac8-6287a7acd788',
+
     'Content-Type': 'application/json'
   }
 })
