@@ -11,28 +11,25 @@ function Login({ setIsLoggedIn, setUserEmail}) {
  
 
   async function handleSubmit(e) {
-    e.preventDefault()
-    try {
-      const credentials = { email, password }
-      const response = await authorize(credentials)
+  e.preventDefault()
+  try {
+    const credentials = { email, password }
+    const data = await authorize(credentials) // <- já vem o JSON
 
-      if (response.status === 401 || response.status === 400) {
-        throw new Error(`Chamada inválida: ${response.status}`)
-      }
-
-      const data = await response.json()
-      if (!data?.token) {
-        throw new Error(`Token inválida: ${data}`)
-      }
-      localStorage.setItem('jwt', data.token)
-      localStorage.setItem('userEmail', email)
-      setUserEmail(email);
-      setIsLoggedIn(true); 
-      navigate('/')
-    } catch (error) {
-      console.log('ERROR - LOGIN:', error)
+    if (!data?.token) {
+      throw new Error(`Token inválido: ${JSON.stringify(data)}`)
     }
+
+    localStorage.setItem('jwt', data.token)
+    localStorage.setItem('userEmail', email)
+    setUserEmail(email)
+    setIsLoggedIn(true)
+    navigate('/')
+  } catch (error) {
+    console.log('ERROR - LOGIN:', error)
   }
+}
+
 
   return (
     <div className="page">
