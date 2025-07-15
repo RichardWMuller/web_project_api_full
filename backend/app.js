@@ -9,7 +9,7 @@ require("dotenv").config();
 app.use(express.json());
 
 mongoose
-  .connect("mongodb://localhost:27017/aroundb")
+  .connect(process.env.CONNECTION)
   .then(() => {
     console.log(`MongoDB connected...`);
   })
