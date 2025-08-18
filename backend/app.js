@@ -31,7 +31,6 @@ app.get("/", (req, res) => {
 app.use("/users", userRoutes);
 app.use("/cards", cardRoutes);
 
-// 👉 Middleware de log de erros
 app.use(errorLogger);
 
 app.use((req, res) => {
