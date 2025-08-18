@@ -20,9 +20,7 @@ export default class Api {
     try {
       const errorData = await res.json()
       if (errorData.message) errorMessage += ` - ${errorData.message}`
-    } catch {
-      // se não puder parsear json, ignora
-    }
+    } catch {}
 
     return Promise.reject(errorMessage)
   }
