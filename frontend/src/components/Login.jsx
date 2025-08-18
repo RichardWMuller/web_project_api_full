@@ -1,5 +1,3 @@
-
-
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { authorize } from '../utils/auth'
@@ -19,7 +17,7 @@ function Login({ setIsLoggedIn, setUserEmail }) {
 
     try {
       const credentials = { email, password }
-      const data = await authorize(credentials) 
+      const data = await authorize(credentials)
       if (!data.token) {
         throw new Error('Token inválido')
       }
@@ -29,28 +27,26 @@ function Login({ setIsLoggedIn, setUserEmail }) {
       setUserEmail(email)
       setIsLoggedIn(true)
 
-      setHasSubmitSucceeded(true)
-      setIsModalOpen(true)
+      // Navega direto no sucesso, sem abrir modal
+      navigate('/')
     } catch (error) {
       console.log('ERROR - LOGIN:', error)
-      setHasSubmitSucceeded(false)
+      setHasSubmitSucceeded(false) // só erro abre modal
       setIsModalOpen(true)
     }
   }
 
   function handleCloseModal() {
     setIsModalOpen(false)
-    if (hasSubmitSucceeded) {
-      navigate('/') 
-    }
   }
 
   return (
     <div className="page">
       <h2 className="form__title">Entrar</h2>
 
-      <Popup isOpen={isModalOpen} onClosePopup={handleCloseModal} readOnly>
-        {hasSubmitSucceeded !== null && <InfoTooltip state={hasSubmitSucceeded} />}
+      {/* Modal aparece apenas se houve erro */}
+      <Popup isOpen={isModalOpen && hasSubmitSucceeded === false} onClosePopup={handleCloseModal} readOnly>
+        <InfoTooltip state={false} />
       </Popup>
 
       <form className="form__content" onSubmit={handleSubmit}>
