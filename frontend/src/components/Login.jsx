@@ -27,11 +27,11 @@ function Login({ setIsLoggedIn, setUserEmail }) {
       setUserEmail(email)
       setIsLoggedIn(true)
 
-      // Navega direto no sucesso, sem abrir modal
+      
       navigate('/')
     } catch (error) {
       console.log('ERROR - LOGIN:', error)
-      setHasSubmitSucceeded(false) // só erro abre modal
+      setHasSubmitSucceeded(false) 
       setIsModalOpen(true)
     }
   }
@@ -44,7 +44,7 @@ function Login({ setIsLoggedIn, setUserEmail }) {
     <div className="page">
       <h2 className="form__title">Entrar</h2>
 
-      {/* Modal aparece apenas se houve erro */}
+      
       <Popup isOpen={isModalOpen && hasSubmitSucceeded === false} onClosePopup={handleCloseModal} readOnly>
         <InfoTooltip state={false} />
       </Popup>
