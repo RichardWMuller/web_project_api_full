@@ -27,7 +27,7 @@ export default function Header({ handleLogout, userEmail }) {
       case '/signup':
         return <Link to="/signin">Faça o Login</Link>
       case '/signin':
-        return <Link to="/signup">Entrar</Link>
+        return <Link to="/signup">Inscreva-se</Link>
         default:
           return null
     }

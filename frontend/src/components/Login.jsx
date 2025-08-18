@@ -2,40 +2,45 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { authorize } from '../utils/auth'
 
-
-function Login({ setIsLoggedIn, setUserEmail}) {
+function Login({ setIsLoggedIn, setUserEmail }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
   const navigate = useNavigate()
 
- 
-
   async function handleSubmit(e) {
-  e.preventDefault()
-  try {
-    const credentials = { email, password }
-    const data = await authorize(credentials) // <- já vem o JSON
+    e.preventDefault()
+    setErrorMessage('') // limpa erro anterior
 
-    if (!data?.token) {
-      throw new Error(`Token inválido: ${JSON.stringify(data)}`)
+    try {
+      const credentials = { email, password }
+      const data = await authorize(credentials)
+
+      if (!data?.token) {
+        throw new Error(`Token inválido: ${JSON.stringify(data)}`)
+      }
+
+      localStorage.setItem('jwt', data.token)
+      localStorage.setItem('userEmail', email)
+      setUserEmail(email)
+      setIsLoggedIn(true)
+      navigate('/')
+    } catch (error) {
+      setErrorMessage(error)
+      console.log('ERROR - LOGIN:', error)
     }
-
-    localStorage.setItem('jwt', data.token)
-    localStorage.setItem('userEmail', email)
-    setUserEmail(email)
-    setIsLoggedIn(true)
-    navigate('/')
-  } catch (error) {
-    console.log('ERROR - LOGIN:', error)
   }
-}
-
 
   return (
     <div className="page">
- 
-
       <h2 className="form__title">Entrar</h2>
+
+      {errorMessage && (
+        <div className="error-popup">
+          {errorMessage}
+        </div>
+      )}
+
       <form className="form__content" onSubmit={handleSubmit}>
         <input
           type="email"
@@ -66,6 +71,7 @@ function Login({ setIsLoggedIn, setUserEmail}) {
           Entrar
         </button>
       </form>
+
       <Link to="/signup" className="page__call-link">
         Ainda não é membro? Inscreva-se aqui!
       </Link>

@@ -16,25 +16,17 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem('jwt')
-    const email = localStorage.getItem('userEmail')
 
     if (token) {
       checkToken(token)
-        .then(async res => {
-          if (res.ok) {
-            const data = await res.json()
-            
-            setIsLoggedIn(true)
-            setUserEmail(data.email) 
-            localStorage.setItem('userEmail', data.email)
-          } else {
-            
-          
-            handleLogout()
-          }
+        .then(data => {
+          setIsLoggedIn(true)
+          setUserEmail(data.email)
+          localStorage.setItem('userEmail', data.email)
+          navigate('/', { replace: true })
         })
         .catch(err => {
-         
+          console.error('Erro ao verificar token:', err)
           handleLogout()
         })
         .finally(() => {
@@ -44,7 +36,6 @@ function App() {
       setIsLoading(false)
     }
   }, [])
- 
 
   function handleLogout() {
     localStorage.removeItem('userEmail')
