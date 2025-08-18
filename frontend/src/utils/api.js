@@ -4,116 +4,81 @@ export default class Api {
     this._headers = headers
   }
 
-  _verifyResponse(res) {
+  async _makeRequest(endpoint, options = {}) {
+    const config = {
+      headers: this._headers,
+      ...options
+    }
+
+    const res = await fetch(`${this._baseUrl}${endpoint}`, config)
+
     if (res.ok) {
       return res.json()
     }
-    return Promise.reject(`Erro: ${res.status}`)
+
+    let errorMessage = `Erro: ${res.status}`
+    try {
+      const errorData = await res.json()
+      if (errorData.message) errorMessage += ` - ${errorData.message}`
+    } catch {
+      // se não puder parsear json, ignora
+    }
+
+    return Promise.reject(errorMessage)
   }
 
-  async getUser() {
-    return await fetch(`${this._baseUrl}/users/me`, {
-      headers: this._headers
-    })
-      .then(this._verifyResponse)
-      .catch(err => {
-        console.error('Erro ao buscar informações do usuário:', err)
-        return Promise.reject(err)
-      })
+  getUser() {
+    return this._makeRequest('/users/me')
   }
 
-  async getInitialCards() {
-    return await fetch(`${this._baseUrl}/cards`, {
-      headers: this._headers
-    })
-      .then(this._verifyResponse)
-      .catch(err => {
-        console.error('Erro ao buscar os cards iniciais:', err)
-        return Promise.reject(err)
-      })
+  getInitialCards() {
+    return this._makeRequest('/cards')
   }
 
-  async createCard(card) {
-    return await fetch(`${this._baseUrl}/cards`, {
-      headers: this._headers,
+  createCard(card) {
+    return this._makeRequest('/cards', {
       method: 'POST',
       body: JSON.stringify(card)
     })
-      .then(this._verifyResponse)
-      .catch(err => {
-        console.error('Erro ao criar o card:', err)
-      })
   }
 
-  async deleteCard(cardId) {
-    return await fetch(`${this._baseUrl}/cards/${cardId}`, {
-      headers: this._headers,
+  deleteCard(cardId) {
+    return this._makeRequest(`/cards/${cardId}`, {
       method: 'DELETE'
     })
-      .then(this._verifyResponse)
-      .catch(err => {
-        console.error('Erro ao deletar o card:', err)
-      })
   }
 
-  async updateUser(userName, userAbout) {
-    return await fetch(`${this._baseUrl}/users/me`, {
+  updateUser(userName, userAbout) {
+    return this._makeRequest('/users/me', {
       method: 'PATCH',
-      headers: this._headers,
-      body: JSON.stringify({
-        name: userName,
-        about: userAbout
-      })
+      body: JSON.stringify({ name: userName, about: userAbout })
     })
-      .then(this._verifyResponse)
-      .catch(err => {
-        console.error('Erro ao buscar informações do usuário:', err)
-      })
   }
 
-  async updateAvatar(avatar) {
-    return await fetch(`${this._baseUrl}/users/me/avatar`, {
+  updateAvatar(avatar) {
+    return this._makeRequest('/users/me/avatar', {
       method: 'PATCH',
-      headers: this._headers,
-      body: JSON.stringify({
-        avatar: avatar
-      })
+      body: JSON.stringify({ avatar })
     })
-      .then(this._verifyResponse)
-      .catch(err => {
-        console.error('Erro ao atualizar o avatar do usuário:', err)
-      })
   }
 
-  async addLike(cardId) {
-    return await fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
-      method: 'PUT',
-      headers: this._headers
+  addLike(cardId) {
+    return this._makeRequest(`/cards/likes/${cardId}`, {
+      method: 'PUT'
     })
-      .then(this._verifyResponse)
-      .catch(err => {
-        console.error('Erro ao dar likes:', err)
-      })
   }
 
-  async removeLike(cardId) {
-    return await fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
-      method: 'DELETE',
-      headers: this._headers
+  removeLike(cardId) {
+    return this._makeRequest(`/cards/likes/${cardId}`, {
+      method: 'DELETE'
     })
-      .then(this._verifyResponse)
-      .catch(err => {
-        console.error('Erro ao remover likes:', err)
-      })
   }
 }
 
 export const api = new Api({
   baseUrl: 'https://around.nomoreparties.co/v1/web_ptbr_09',
-
   headers: {
     authorization: 'e56efdde-cda5-421a-9ac8-6287a7acd788',
-
     'Content-Type': 'application/json'
   }
 })
